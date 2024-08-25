@@ -16,7 +16,7 @@ public class SearchTests {
             "Python", "Java", "978-5-85582-347-9"
     })
     @ParameterizedTest(name = "For search query {0}, books are returned")
-    void searchForExistedBooks(String searchQuery) {
+    void searchForExistedBooksTest(String searchQuery) {
         mainPage.openPage()
                 .enterSearchArgument(searchQuery)
                 .searchResultShouldBeMoreThanZero();
@@ -24,7 +24,7 @@ public class SearchTests {
 
     @ParameterizedTest
     @CsvFileSource(resources = "/isbn.csv", numLinesToSkip = 1)
-    void searchOnlyByIsbn(String isbn) {
+    void searchOnlyByIsbnTest(String isbn) {
         mainPage.openPage()
                 .enterSearchArgument(isbn)
                 .searchResultShouldBeMoreThanZero();
@@ -35,7 +35,7 @@ public class SearchTests {
             "noting, 1",
             "!?%(), 2"
     })
-    void searchForIncorrectValues(String searchQuery) {
+    void searchForIncorrectValuesTest(String searchQuery) {
         mainPage.openPage()
                 .enterSearchArgument(searchQuery)
                 .searchDoesNotFindAnything();
