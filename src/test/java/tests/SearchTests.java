@@ -2,14 +2,15 @@ package tests;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvFileSource;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 import page.MainPage;
+import page.SearchPage;
+import java.util.stream.Stream;
 
 public class SearchTests {
 
     MainPage mainPage = new MainPage();
+    SearchPage searchPage = new SearchPage();
 
     @Tag("BLOCKER")
     @ValueSource(strings = {
@@ -18,27 +19,33 @@ public class SearchTests {
     @ParameterizedTest(name = "For search query {0}, books are returned")
     void searchForExistedBooksTest(String searchQuery) {
         mainPage.openPage()
-                .enterSearchArgument(searchQuery)
-                .searchResultShouldBeMoreThanZero();
+                .enterSearchArgument(searchQuery);
+        searchPage.searchResultShouldBeMoreThanZero();
     }
 
     @ParameterizedTest
     @CsvFileSource(resources = "/isbn.csv", numLinesToSkip = 1)
     void searchOnlyByIsbnTest(String isbn) {
         mainPage.openPage()
-                .enterSearchArgument(isbn)
-                .searchResultShouldBeMoreThanZero();
+                .enterSearchArgument(isbn);
+        searchPage.searchResultShouldBeMoreThanZero();
+    }
+
+////    @CsvSource({
+////            "noting, 1",
+////            "!?%(), 2"
+////    })
+
+    static Stream<String> searchForIncorrectValuesTest() {
+        return Stream.of("noting", "!?%()");
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "noting, 1",
-            "!?%(), 2"
-    })
+    @MethodSource
     void searchForIncorrectValuesTest(String searchQuery) {
         mainPage.openPage()
-                .enterSearchArgument(searchQuery)
-                .searchDoesNotFindAnything();
+                .enterSearchArgument(searchQuery);
+        searchPage.searchDoesNotFindAnything();
     }
 
 }
