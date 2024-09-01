@@ -1,5 +1,7 @@
 package tests;
 
+import com.codeborne.selenide.Selenide;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
@@ -11,6 +13,11 @@ public class SearchTests {
 
     MainPage mainPage = new MainPage();
     SearchPage searchPage = new SearchPage();
+
+    @AfterEach
+    void afterEach() {
+        Selenide.closeWebDriver();
+    }
 
     @Tag("BLOCKER")
     @ValueSource(strings = {
@@ -31,17 +38,12 @@ public class SearchTests {
         searchPage.searchResultShouldBeMoreThanZero();
     }
 
-////    @CsvSource({
-////            "noting, 1",
-////            "!?%(), 2"
-////    })
-
     static Stream<String> searchForIncorrectValuesTest() {
         return Stream.of("noting", "!?%()");
     }
 
     @ParameterizedTest
-    @MethodSource
+    @MethodSource("searchForIncorrectValuesTest")
     void searchForIncorrectValuesTest(String searchQuery) {
         mainPage.openPage()
                 .enterSearchArgument(searchQuery);
